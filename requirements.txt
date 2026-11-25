@@ -1,0 +1,16 @@
+# Install PyTorch FIRST for your hardware (https://pytorch.org/get-started/locally/), e.g. for NVIDIA:
+#   pip install torch --index-url https://download.pytorch.org/whl/cu124
+numpy
+matplotlib
+scikit-learn
+regex
+tiktoken          # only used by tests, to cross-check the from-scratch tokenizer
+huggingface_hub
+datasets
+transformers
+peft
+trl
+accelerate
+python-chess
+gradio
+pytest
