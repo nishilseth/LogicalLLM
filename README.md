@@ -1,5 +1,7 @@
 # LogicalLLM - Fine-tuning LLMs for Game AI (Poker & Chess)
 
+[![tests](https://github.com/nishilseth/LogicalLLM/actions/workflows/tests.yml/badge.svg)](https://github.com/nishilseth/LogicalLLM/actions) ![license](https://img.shields.io/badge/license-MIT-blue)
+
 *Seasons of Code, Web and Coding Club, IIT Bombay (May-Jul 2025), later extended into an end-to-end project.*
 
 Can a small language model learn to play imperfect-information (poker) and perfect-information (chess) games, and how
@@ -15,7 +17,7 @@ in pure Python up to LoRA instruction-tuning, GRPO reinforcement learning, engin
 
 ## Results
 
-All models: **Qwen2.5-0.5B-Instruct + LoRA**, trained on an NVIDIA laptop GPU (`--profile gpu`; a smaller 8 GB-MacBook run is in `results_mac/`).
+All models: **Qwen2.5-0.5B-Instruct + LoRA**, trained on an NVIDIA laptop GPU (`--profile gpu`; `--profile mac` is a smaller version for 8 GB Apple-silicon laptops).
 Poker is evaluated on a fixed, class-balanced **500-hand subset of the PokerBench test split** (chance = 20%).
 
 ![poker results](docs/figures/poker_results.png)
@@ -64,7 +66,7 @@ pip install -r requirements.txt
 python scripts/setup_stockfish.py                         # chess engine
 python -m pytest -q tests                                 # 15 tests
 
-python demo/app.py                                        # interactive demo (needs trained adapters in outputs/)
+python demo/app.py                                        # interactive demo (uses the trained adapters in models/)
 python scripts/train_all.py --profile mac                 # or --profile gpu; full pipeline, resumable
 ```
 Full instructions for training on an NVIDIA laptop: [docs/TRAINING.md](docs/TRAINING.md). Colab/Unsloth GRPO notebook (Gemma-3-1B): [notebooks/poker_grpo_colab.ipynb](notebooks/poker_grpo_colab.ipynb) - *written but not yet executed*.

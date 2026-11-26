@@ -11,8 +11,17 @@ import chess, chess.svg
 import gradio as gr
 
 BASE = os.environ.get("BASE_MODEL", "Qwen/Qwen2.5-0.5B-Instruct")
-POKER_ADAPTER = os.environ.get("POKER_ADAPTER", f"{ROOT}/outputs/poker-sft")
-CHESS_ADAPTER = os.environ.get("CHESS_ADAPTER", f"{ROOT}/outputs/chess-sft")
+def _first_existing(*names):
+    """Prefer adapters shipped in models/, then freshly trained ones in outputs/."""
+    for n in names:
+        for base in ("models", "outputs"):
+            if os.path.exists(f"{ROOT}/{base}/{n}"):
+                return f"{ROOT}/{base}/{n}"
+    return f"{ROOT}/models/{names[0]}"
+
+
+POKER_ADAPTER = os.environ.get("POKER_ADAPTER") or _first_existing("poker-grpo", "poker-sft")
+CHESS_ADAPTER = os.environ.get("CHESS_ADAPTER") or _first_existing("chess-sft")
 _cache = {}
 
 
@@ -48,7 +57,7 @@ def poker_run(scenario, gold):
     for adapter in (None, POKER_ADAPTER):
         (model, tok), is_ft = get_model(adapter)
         if adapter and not is_ft:
-            res.append("(no fine-tuned adapter found - run scripts/run_all.sh)"); continue
+            res.append("(no fine-tuned adapter found - run python scripts/train_all.py)"); continue
         a = generate(model, tok, [to_chat(scenario)], max_new_tokens=12)[0]
         res.append(f"{a}   (reward {poker_reward(a, gold):.2f}/2.00)" if gold else a)
     return res[0], res[1], gold
