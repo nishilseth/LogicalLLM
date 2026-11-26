@@ -10,7 +10,7 @@ smooth = lambda y, k=10: [sum(y[max(0, i - k + 1):i + 1]) / len(y[max(0, i - k +
 
 # poker: accuracy by stage
 stages = [("Chance", {"type_accuracy": 0.2, "mean_reward": None}), ]
-for name, f in [("Zero-shot", "zeroshot.json"), ("+ SFT (LoRA)", "sft_eval.json"), ("+ GRPO", "grpo_eval.json")]:
+for name, f in [("Zero-shot", "poker/zeroshot.json"), ("+ SFT (LoRA)", "poker/sft_eval.json"), ("+ GRPO", "poker/grpo_eval.json")]:
     d = load(f)
     if d:
         stages.append((name, [v for k, v in d.items() if not k.startswith("_")][0]))
@@ -37,3 +37,15 @@ if sft or grpo:
         ax[1].set_title("GRPO mean reward (max 2.0)"); ax[1].set_xlabel("step")
     plt.tight_layout(); plt.savefig(f"{F}/poker_training.png", dpi=140); plt.close()
 print("figures written to", F)
+
+ch = load("chess/eval.json")
+if ch:
+    fig, ax = plt.subplots(1, 2, figsize=(9, 3.4))
+    names = ["LLM only", "LLM + Stockfish", "Random legal"]
+    acpl = [ch["llm"]["position_benchmark"]["acpl"], ch["llm+stockfish"]["position_benchmark"]["acpl"], ch["random_legal"]["acpl"]]
+    ax[0].bar(names, acpl, color=["#4C78A8", "#F58518", "#bbb"]); ax[0].set_title("Avg. centipawn loss vs Stockfish (lower = better)")
+    for i, v in enumerate(acpl): ax[0].text(i, v + 5, f"{v:.0f}", ha="center")
+    lr = [ch["llm"]["position_benchmark"]["legal_rate"] * 100]
+    ax[1].bar(["LLM first choice\nis legal (%)"], lr, color="#4C78A8"); ax[1].set_ylim(0, 100); ax[1].set_title("Legal-move rate")
+    ax[1].text(0, lr[0] + 2, f"{lr[0]:.0f}%", ha="center")
+    plt.tight_layout(); plt.savefig(f"{F}/chess_results.png", dpi=140); plt.close()
