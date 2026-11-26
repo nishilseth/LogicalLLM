@@ -1,0 +1,99 @@
+{
+  "outputs/poker-grpo": {
+    "n": 500,
+    "parse_rate": 1.0,
+    "type_accuracy": 0.54,
+    "exact_match": 0.474,
+    "mean_reward": 1.1637072547972276,
+    "max_reward": 2.0,
+    "per_type_accuracy": {
+      "bet": 0.62,
+      "call": 0.69,
+      "check": 0.48,
+      "fold": 0.32,
+      "raise": 0.59
+    }
+  },
+  "_samples": [
+    {
+      "pred": "bet 29",
+      "gold": "bet 29"
+    },
+    {
+      "pred": "call",
+      "gold": "fold"
+    },
+    {
+      "pred": "fold",
+      "gold": "fold"
+    },
+    {
+      "pred": "call",
+      "gold": "raise 22"
+    },
+    {
+      "pred": "check",
+      "gold": "check"
+    },
+    {
+      "pred": "check",
+      "gold": "check"
+    },
+    {
+      "pred": "bet 24",
+      "gold": "bet 24"
+    },
+    {
+      "pred": "raise 38",
+      "gold": "raise 38"
+    },
+    {
+      "pred": "check",
+      "gold": "check"
+    },
+    {
+      "pred": "raise 83",
+      "gold": "raise 77"
+    },
+    {
+      "pred": "call",
+      "gold": "raise 89"
+    },
+    {
+      "pred": "raise 81",
+      "gold": "fold"
+    },
+    {
+      "pred": "check",
+      "gold": "check"
+    },
+    {
+      "pred": "check",
+      "gold": "check"
+    },
+    {
+      "pred": "call",
+      "gold": "call"
+    },
+    {
+      "pred": "check",
+      "gold": "check"
+    },
+    {
+      "pred": "call",
+      "gold": "call"
+    },
+    {
+      "pred": "raise 83",
+      "gold": "raise 80"
+    },
+    {
+      "pred": "call",
+      "gold": "call"
+    },
+    {
+      "pred": "bet 4",
+      "gold": "bet 4"
+    }
+  ]
+}

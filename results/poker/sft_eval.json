@@ -1,27 +1,23 @@
 {
   "outputs/poker-sft": {
-    "n": 300,
+    "n": 500,
     "parse_rate": 1.0,
-    "type_accuracy": 0.44,
-    "exact_match": 0.44,
-    "mean_reward": 0.9919999999999972,
+    "type_accuracy": 0.536,
+    "exact_match": 0.49,
+    "mean_reward": 1.160207622987927,
     "max_reward": 2.0,
     "per_type_accuracy": {
-      "bet": 0.0,
-      "call": 0.5833333333333334,
-      "check": 0.9333333333333333,
-      "fold": 0.6833333333333333,
-      "raise": 0.0
+      "bet": 0.26,
+      "call": 0.61,
+      "check": 0.78,
+      "fold": 0.6,
+      "raise": 0.43
     }
   },
   "_samples": [
     {
-      "pred": "call",
-      "gold": "call"
-    },
-    {
-      "pred": "call",
-      "gold": "fold"
+      "pred": "bet 29",
+      "gold": "bet 29"
     },
     {
       "pred": "call",
@@ -29,7 +25,7 @@
     },
     {
       "pred": "fold",
-      "gold": "call"
+      "gold": "fold"
     },
     {
       "pred": "call",
@@ -40,44 +36,28 @@
       "gold": "check"
     },
     {
-      "pred": "fold",
-      "gold": "fold"
-    },
-    {
-      "pred": "fold",
-      "gold": "fold"
-    },
-    {
-      "pred": "call",
-      "gold": "raise 88"
-    },
-    {
-      "pred": "call",
-      "gold": "fold"
-    },
-    {
-      "pred": "call",
-      "gold": "call"
+      "pred": "check",
+      "gold": "check"
     },
     {
       "pred": "check",
-      "gold": "bet 12"
+      "gold": "bet 24"
     },
     {
-      "pred": "fold",
-      "gold": "raise 86"
+      "pred": "raise 38",
+      "gold": "raise 38"
     },
     {
-      "pred": "fold",
-      "gold": "call"
+      "pred": "check",
+      "gold": "check"
+    },
+    {
+      "pred": "raise 83",
+      "gold": "raise 77"
     },
     {
       "pred": "call",
-      "gold": "raise 11"
-    },
-    {
-      "pred": "fold",
-      "gold": "raise 90"
+      "gold": "raise 89"
     },
     {
       "pred": "fold",
@@ -89,11 +69,31 @@
     },
     {
       "pred": "check",
-      "gold": "bet 17"
+      "gold": "check"
+    },
+    {
+      "pred": "call",
+      "gold": "call"
     },
     {
       "pred": "check",
-      "gold": "bet 20"
+      "gold": "check"
+    },
+    {
+      "pred": "call",
+      "gold": "call"
+    },
+    {
+      "pred": "raise 84",
+      "gold": "raise 80"
+    },
+    {
+      "pred": "call",
+      "gold": "call"
+    },
+    {
+      "pred": "bet 4",
+      "gold": "bet 4"
     }
   ]
 }

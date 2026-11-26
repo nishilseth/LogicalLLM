@@ -1,23 +1,53 @@
 {
-  "Qwen/Qwen2.5-0.5B-Instruct": {
-    "n": 300,
+  "always_call": {
+    "n": 500,
     "parse_rate": 1.0,
     "type_accuracy": 0.2,
-    "exact_match": 0.19333333333333333,
-    "mean_reward": 0.5459999999999995,
+    "exact_match": 0.2,
+    "mean_reward": 0.5599999999999958,
     "max_reward": 2.0,
     "per_type_accuracy": {
-      "bet": 0.03333333333333333,
+      "bet": 0.0,
+      "call": 1.0,
+      "check": 0.0,
+      "fold": 0.0,
+      "raise": 0.0
+    }
+  },
+  "uniform_random": {
+    "n": 500,
+    "parse_rate": 1.0,
+    "type_accuracy": 0.22,
+    "exact_match": 0.134,
+    "mean_reward": 0.5530032842089745,
+    "max_reward": 2.0,
+    "per_type_accuracy": {
+      "bet": 0.25,
+      "call": 0.23,
+      "check": 0.17,
+      "fold": 0.24,
+      "raise": 0.21
+    }
+  },
+  "Qwen/Qwen2.5-0.5B-Instruct": {
+    "n": 500,
+    "parse_rate": 1.0,
+    "type_accuracy": 0.21,
+    "exact_match": 0.186,
+    "mean_reward": 0.5443999999999964,
+    "max_reward": 2.0,
+    "per_type_accuracy": {
+      "bet": 0.12,
       "call": 0.0,
       "check": 0.0,
-      "fold": 0.9666666666666667,
+      "fold": 0.93,
       "raise": 0.0
     }
   },
   "_samples": [
     {
       "pred": "fold",
-      "gold": "call"
+      "gold": "bet 29"
     },
     {
       "pred": "fold",
@@ -26,10 +56,6 @@
     {
       "pred": "fold",
       "gold": "fold"
-    },
-    {
-      "pred": "fold",
-      "gold": "call"
     },
     {
       "pred": "fold",
@@ -40,47 +66,31 @@
       "gold": "check"
     },
     {
-      "pred": "bet",
-      "gold": "fold"
-    },
-    {
       "pred": "fold",
-      "gold": "fold"
-    },
-    {
-      "pred": "fold",
-      "gold": "raise 88"
-    },
-    {
-      "pred": "fold",
-      "gold": "fold"
-    },
-    {
-      "pred": "fold",
-      "gold": "call"
-    },
-    {
-      "pred": "fold",
-      "gold": "bet 12"
-    },
-    {
-      "pred": "fold",
-      "gold": "raise 86"
+      "gold": "check"
     },
     {
       "pred": "bet",
-      "gold": "call"
+      "gold": "bet 24"
     },
     {
       "pred": "fold",
-      "gold": "raise 11"
+      "gold": "raise 38"
     },
     {
       "pred": "fold",
-      "gold": "raise 90"
+      "gold": "check"
     },
     {
       "pred": "fold",
+      "gold": "raise 77"
+    },
+    {
+      "pred": "fold",
+      "gold": "raise 89"
+    },
+    {
+      "pred": "bet",
       "gold": "fold"
     },
     {
@@ -89,11 +99,31 @@
     },
     {
       "pred": "fold",
-      "gold": "bet 17"
+      "gold": "check"
     },
     {
       "pred": "fold",
-      "gold": "bet 20"
+      "gold": "call"
+    },
+    {
+      "pred": "fold",
+      "gold": "check"
+    },
+    {
+      "pred": "fold",
+      "gold": "call"
+    },
+    {
+      "pred": "fold",
+      "gold": "raise 80"
+    },
+    {
+      "pred": "fold",
+      "gold": "call"
+    },
+    {
+      "pred": "fold",
+      "gold": "bet 4"
     }
   ]
 }
