@@ -64,3 +64,24 @@ def stream_lichess(n_games=1000, min_elo=1800, per_game=4, seed=0):
                 yield {"prompt": p, "move": m}
         if games >= n_games:
             return
+
+
+def load_eval_positions(n, seed=999, cache="results/chess/eval_positions.json", retries=6):
+    """Held-out positions (a different shuffle seed from training). Cached on disk and retried,
+    because streaming from the Hub can time out on flaky connections."""
+    import json, os, time
+    if os.path.exists(cache):
+        cached = json.load(open(cache))
+        if len(cached) >= n:
+            return cached[:n]
+    os.environ.setdefault("HF_HUB_DOWNLOAD_TIMEOUT", "120")
+    for attempt in range(1, retries + 1):
+        try:
+            ex = list(stream_lichess(n_games=n, per_game=1, seed=seed))
+            os.makedirs(os.path.dirname(cache), exist_ok=True)
+            json.dump(ex, open(cache, "w"))
+            return ex
+        except Exception as e:  # network errors surface as many different exception types
+            print(f"[eval positions] attempt {attempt}/{retries} failed: {type(e).__name__}: {str(e)[:120]}", flush=True)
+            time.sleep(min(5 * attempt, 30))
+    raise RuntimeError("could not download Lichess positions; check your connection and re-run")

@@ -6,9 +6,9 @@
 """
 import argparse, json, math, random
 import chess
-from .engine import Stockfish
+from .engine import Stockfish, find_stockfish
 from .agent import LLMAgent, HybridAgent
-from .data import stream_lichess
+from .data import load_eval_positions
 
 
 def position_benchmark(agent, engine, examples):
@@ -63,10 +63,8 @@ if __name__ == "__main__":
     ap.add_argument("--out")
     a = ap.parse_args()
     model, tok = load_model(a.model, a.adapter)
-    # held-out: different shuffle seed from training data
-    test = []
-    for ex in stream_lichess(n_games=a.positions, per_game=1, seed=999):
-        test.append(ex)
+    test = load_eval_positions(a.positions)   # held-out, cached, retried
+    find_stockfish()                          # fail fast (before any slow work) if the engine is missing
     res = {}
     with Stockfish(depth=8) as eng:
         for agent in (LLMAgent(model, tok, k=1), HybridAgent(model, tok, eng, k=a.hybrid_k)):

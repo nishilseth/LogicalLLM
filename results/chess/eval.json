@@ -1,0 +1,37 @@
+{
+  "llm": {
+    "position_benchmark": {
+      "positions": 40,
+      "legal_rate": 0.225,
+      "top1_vs_stockfish": 0.025,
+      "acpl": 417.675
+    },
+    "match": {
+      "opponent_elo": 1350,
+      "games": 4,
+      "score": 0.0,
+      "elo_diff_estimate": -798,
+      "illegal_moves": 100,
+      "plies": 220
+    }
+  },
+  "llm+stockfish": {
+    "position_benchmark": {
+      "positions": 40,
+      "legal_rate": 0.125,
+      "top1_vs_stockfish": 0.375,
+      "acpl": 249.65
+    },
+    "match": {
+      "opponent_elo": 1350,
+      "games": 4,
+      "score": 0.125,
+      "elo_diff_estimate": -338,
+      "illegal_moves": 158,
+      "plies": 382
+    }
+  },
+  "random_legal": {
+    "acpl": 449.45
+  }
+}
