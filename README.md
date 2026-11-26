@@ -13,36 +13,46 @@ in pure Python up to LoRA instruction-tuning, GRPO reinforcement learning, engin
 | **From scratch** | MLP with manual backprop (pure Python, no NumPy); GPT-2 byte-level BPE tokenizer and full transformer forward pass (NumPy) |
 | **Demo** | Gradio app: compare base vs fine-tuned poker decisions, play chess against the model, generate text with the NumPy GPT-2 |
 
-## Results (small-scale runs on an 8 GB MacBook; reproducible with `--profile mac`)
+## Results
 
-All models: **Qwen2.5-0.5B-Instruct** + LoRA. Evaluation uses a fixed, class-balanced 300-hand subset of the PokerBench *test* split
-(chance = 20%).
+All models: **Qwen2.5-0.5B-Instruct + LoRA**, trained on an NVIDIA laptop GPU (`--profile gpu`; a smaller 8 GB-MacBook run is in `results_mac/`).
+Poker is evaluated on a fixed, class-balanced **500-hand subset of the PokerBench test split** (chance = 20%).
 
 ![poker results](docs/figures/poker_results.png)
 
 | Poker policy | Action-type accuracy | Mean reward (max 2.0) |
 |---|---|---|
 | Chance / always-call | 20% | 0.56 |
-| Zero-shot (base model) | 20% (it answers "fold" ~97% of the time) | 0.55 |
-| + LoRA SFT (800 hands, 200 steps) | **44%** | 0.99 |
-| + GRPO (20 steps from the SFT adapter) | 43% | 0.98 |
+| Zero-shot (base model; almost always answers "fold") | 21% | 0.54 |
+| + LoRA SFT (8,000 hands, 500 steps) | **53.6%** | 1.16 |
+| + GRPO (200 steps from the SFT adapter) | **54.0%** | 1.16 |
+
+Per-action accuracy (the interesting part):
+
+| | fold | check | call | bet | raise |
+|---|---|---|---|---|---|
+| SFT | 60% | 78% | 61% | 26% | 43% |
+| SFT + GRPO | 32% | 48% | 69% | **62%** | **59%** |
+
+![poker training](docs/figures/poker_training.png)
 
 **Takeaways, honestly stated**
-- Instruction tuning more than doubles accuracy over zero-shot (20% to 44%) with under 800 training hands.
-- 20 GRPO steps did **not** improve on SFT. That's expected at this budget (tiny group size, 20 steps, lr 5e-6), and I don't claim otherwise. The GRPO pipeline itself (group sampling, z-scored advantages, clipped update, shaped reward) runs end to end; a longer run is the next experiment (`--profile gpu`, or the Colab notebook).
-- Neither model ever predicts `bet`/`raise`; exact chip sizes are hard to learn, which is why the reward gives partial credit for close sizes.
+- Instruction tuning is what does the heavy lifting: 21% to 54% (2.5x chance) with 8,000 hands. SFT loss fell from about 0.96 to 0.32.
+- **GRPO did not improve overall accuracy** (54.0% vs 53.6% and equal mean reward, both within noise at n=500, about 2 points standard error), and the GRPO training reward is noisy and roughly flat (about 1.0 to 1.1 over 200 steps).
+- GRPO **did change behaviour**: the policy moved away from passive actions toward betting and raising (bet 26% to 62%, raise 43% to 59%) at the cost of fold/check accuracy. That's the size-aware reward doing what it was designed to do, but at this budget it redistributes accuracy instead of adding any.
+- Likely reasons and next steps: group size of only 4, 200 steps, KL penalty off (beta=0), a 0.5B model. Next experiments: larger group (8-16), more steps, a bigger model (the Colab notebook uses Gemma-3-1B).
 
 ![chess results](docs/figures/chess_results.png)
 
-| Chess agent (40 held-out Lichess positions) | Legal first move | Avg. centipawn loss (lower = better) |
-|---|---|---|
-| Random legal move | 100% | 449 |
-| LLM only (SFT on ~1,600 positions from 400 games) | 22.5% | 418 |
-| LLM proposes, Stockfish verifies (k=5) | - | 250 |
+| Chess agent (100 held-out Lichess positions) | Legal first move | Avg. centipawn loss (lower = better) | Games vs 1350-Elo Stockfish |
+|---|---|---|---|
+| Random legal move | 100% | 445 | - |
+| LLM only (SFT on ~12k positions from 3,000 games) | 24% | 405 | 0 / 10 |
+| LLM proposes, Stockfish verifies (k=5) | - | 259 | 1 / 10 |
 
-- In 4 games vs. Stockfish limited to 1350 Elo, the LLM-only agent scored 0/4 and the hybrid scored 0.5/4.
-- **Read the hybrid number carefully:** when none of the LLM's candidates is legal, the hybrid falls back to Stockfish, so much of its improvement is Stockfish doing the work. The honest conclusion is that a 0.5B model trained on ~1.6k positions has not learned to play chess; it has learned the move *format*. The evaluation framework is what's reusable here.
-- Obvious next steps: far more data (the pipeline streams Lichess; the `gpu` profile uses ~12k positions, more is easy), put the legal-move list in the prompt, and a larger model.
+- **Read the hybrid number carefully:** when none of the LLM's candidates is legal, the hybrid falls back to Stockfish, so most of its improvement is Stockfish doing the work, not the LLM.
+- Training on 7.5x more data than my first run (400 games) moved the legal-move rate only from 22.5% to 24%. So **data volume is not the bottleneck**: a 0.5B model does not learn to read a board from a FEN string alone. It learned the move *format*, not chess. The evaluation framework is the reusable part.
+- Next steps: put the list of legal moves in the prompt, use a larger model, or supervise on engine-labelled best moves instead of human moves.
 
 ## Quick start
 
@@ -92,7 +102,8 @@ results/        metrics (JSON) behind every number above
 ```
 
 ## Limitations
-- Small models and small data (hundreds to ~1.6k examples), constrained by an 8 GB laptop. The results show the pipeline working, not state-of-the-art play.
-- GRPO ran for only 20 steps, with no gain over SFT. The Colab notebook has not been executed.
-- Poker is scored on action type (and size credit), not on game-theoretic exploitability or win-rate in play.
-- Chess evaluation uses 40 positions and 4 games, which is too small for tight confidence intervals.
+- Small models (0.5B) and modest data, constrained by laptop hardware. The results show a working, evaluated pipeline, not state-of-the-art play.
+- GRPO gave no net accuracy gain over SFT in this run; the Colab/Gemma-3-1B notebook has not been executed.
+- Poker is scored on action type (plus size credit) against solver labels, not on game-theoretic exploitability or win-rate in actual play.
+- Chess evaluation is 100 positions and 10 games: enough to see the gap, too small for tight confidence intervals. The LLM-only agent never won a game.
+- Single seed per experiment; differences of about 2 points on poker accuracy are within noise.
