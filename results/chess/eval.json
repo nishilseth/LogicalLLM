@@ -1,37 +1,37 @@
 {
   "llm": {
     "position_benchmark": {
-      "positions": 40,
-      "legal_rate": 0.225,
-      "top1_vs_stockfish": 0.025,
-      "acpl": 417.675
+      "positions": 100,
+      "legal_rate": 0.24,
+      "top1_vs_stockfish": 0.04,
+      "acpl": 405.05
     },
     "match": {
       "opponent_elo": 1350,
-      "games": 4,
+      "games": 10,
       "score": 0.0,
       "elo_diff_estimate": -798,
-      "illegal_moves": 100,
-      "plies": 220
+      "illegal_moves": 148,
+      "plies": 441
     }
   },
   "llm+stockfish": {
     "position_benchmark": {
-      "positions": 40,
-      "legal_rate": 0.125,
-      "top1_vs_stockfish": 0.375,
-      "acpl": 249.65
+      "positions": 100,
+      "legal_rate": 0.2,
+      "top1_vs_stockfish": 0.38,
+      "acpl": 258.97
     },
     "match": {
       "opponent_elo": 1350,
-      "games": 4,
-      "score": 0.125,
-      "elo_diff_estimate": -338,
-      "illegal_moves": 158,
-      "plies": 382
+      "games": 10,
+      "score": 0.1,
+      "elo_diff_estimate": -382,
+      "illegal_moves": 248,
+      "plies": 805
     }
   },
   "random_legal": {
-    "acpl": 449.45
+    "acpl": 445.15
   }
 }
